@@ -13,6 +13,7 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.support.CompositeItemProcessor;
+import org.springframework.batch.item.validator.BeanValidatingItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,6 @@ import java.util.Arrays;
 
 @EnableBatchProcessing
 public abstract class BaseConfig {
-
     @Autowired
     protected JobBuilderFactory jobBuilderFactory;
 
@@ -73,12 +73,24 @@ public abstract class BaseConfig {
     @Bean
     @StepScope
     public ItemProcessor<Employee, Employee> compositeProcessor(){
-        CompositeItemProcessor<Employee, Employee> compositeItemProcessor =
+        CompositeItemProcessor<Employee, Employee> compositeProcessor =
                 new CompositeItemProcessor<>();
 
-        compositeItemProcessor.setDelegates(Arrays.asList(this.existsCheckProcessor,
+        compositeProcessor.setDelegates(Arrays.asList(validationProcessor(),
+                this.existsCheckProcessor,
                 this.genderConvertProcessor));
 
-        return compositeItemProcessor;
+        return compositeProcessor;
+    }
+    @Bean
+    @StepScope
+    public BeanValidatingItemProcessor<Employee> validationProcessor(){
+
+        BeanValidatingItemProcessor<Employee> validationProcessor =
+                new BeanValidatingItemProcessor<>();
+
+        validationProcessor.setFilter(true);
+
+        return validationProcessor;
     }
 }
