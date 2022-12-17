@@ -12,12 +12,14 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 @EnableBatchProcessing
 public abstract class BaseConfig {
@@ -31,6 +33,10 @@ public abstract class BaseConfig {
     @Autowired
     @Qualifier("GenderConvertProcessor")
     protected ItemProcessor<Employee, Employee> genderConvertProcessor;
+
+    @Autowired
+    @Qualifier("ExistsCheckProcessor")
+    protected ItemProcessor<Employee, Employee> existsCheckProcessor;
 
     @Autowired
     protected ItemReadListener<Employee> readListener;
@@ -63,4 +69,16 @@ public abstract class BaseConfig {
                 })
                 .build();
         }
+
+    @Bean
+    @StepScope
+    public ItemProcessor<Employee, Employee> compositeProcessor(){
+        CompositeItemProcessor<Employee, Employee> compositeItemProcessor =
+                new CompositeItemProcessor<>();
+
+        compositeItemProcessor.setDelegates(Arrays.asList(this.existsCheckProcessor,
+                this.genderConvertProcessor));
+
+        return compositeItemProcessor;
+    }
 }
