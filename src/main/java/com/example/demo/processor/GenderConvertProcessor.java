@@ -6,7 +6,7 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("GenderConvertProcessor")
 @StepScope
 @Slf4j
 public class GenderConvertProcessor implements ItemProcessor<Employee, Employee> {

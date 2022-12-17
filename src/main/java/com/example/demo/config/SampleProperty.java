@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:property/sample.property")
+@PropertySource("classpath:property/sample.properties")
 @Getter
 @ToString
 public class SampleProperty {

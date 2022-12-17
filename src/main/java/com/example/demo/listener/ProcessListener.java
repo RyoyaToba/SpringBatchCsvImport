@@ -3,7 +3,6 @@ package com.example.demo.listener;
 import com.example.demo.domaim.model.Employee;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ItemProcessListener;
-import org.springframework.batch.core.ItemReadListener;
 import org.springframework.stereotype.Component;
 
 @Component
