@@ -46,7 +46,7 @@ public class JdbcImportBatchConfig extends BaseConfig{
                 .build();
     }
 
-    @Bean
+    @Bean("JdbcJob")
     public Job csvImportJdbcJob(){
         return this.jobBuilderFactory.get("CsvImportJdbcJob")
                 .incrementer(new RunIdIncrementer())
